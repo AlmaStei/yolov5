@@ -358,7 +358,7 @@ def classify_albumentations(
 
         check_version(A.__version__, "1.0.3", hard=True)  # version requirement
         if augment:  # Resize and crop
-            T = [A.RandomResizedCrop(height=size, width=size, scale=scale, ratio=ratio)]
+            T = [A.Resize(height=size, width=size,interpolation=cv2.INTER_LINEAR, always_apply=True, p=1)]#A.RandomResizedCrop(height=size, width=size, scale=scale, ratio=ratio)
             if auto_aug:
                 # TODO: implement AugMix, AutoAug & RandAug in albumentation
                 LOGGER.info(f"{prefix}auto augmentations are currently not supported")
@@ -373,6 +373,7 @@ def classify_albumentations(
         else:  # Use fixed crop for eval set (reproducibility)
             T = [A.SmallestMaxSize(max_size=size), A.CenterCrop(height=size, width=size)]
         T += [A.Normalize(mean=mean, std=std), ToTensorV2()]  # Normalize and convert to Tensor
+        #T += [A.Normalize(mean=mean, std=std), ToTensor()]  # Normalize and convert to Tensor
         LOGGER.info(prefix + ", ".join(f"{x}".replace("always_apply=False, ", "") for x in T if x.p))
         return A.Compose(T)
 
