@@ -368,8 +368,9 @@ def classify_albumentations(
                 if vflip > 0:
                     T += [A.VerticalFlip(p=vflip)]
                 if jitter > 0:
-                    color_jitter = (float(jitter),) * 3  # repeat value for brightness, contrast, satuaration, 0 hue
-                    T += [A.ColorJitter(*color_jitter, 0)]
+                    #color_jitter = (float(jitter),) * 3  # repeat value for brightness, contrast, satuaration, 0 hue
+                    #T += [A.ColorJitter(*color_jitter, 0)]
+                    T += [A.ColorJitter(brightness=(0.8, 1), contrast=(0.8, 1), saturation=(0.1, 1), hue=(-0.1, 0.1),p=jitter)]
         else:  # Use fixed crop for eval set (reproducibility)
             T = [A.SmallestMaxSize(max_size=size), A.CenterCrop(height=size, width=size)]
         T += [A.Normalize(mean=mean, std=std), ToTensorV2()]  # Normalize and convert to Tensor
