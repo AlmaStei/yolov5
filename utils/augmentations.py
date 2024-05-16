@@ -373,7 +373,7 @@ def classify_albumentations(
                     #T += [A.ColorJitter(*color_jitter, 0)]
                     T += [A.ColorJitter(brightness=(0.8, 1), contrast=(0.8, 1), saturation=(0.1, 1), hue=(-0.1, 0.1),p=jitter)]
                 if rotation > 0:
-                    T += [A.Rotate(limit=180,p=rotation)]
+                    T += [A.Rotate(border_mode=1, limit=180,p=rotation)] #border_mode=1 means cv2.BORDER_REPLICATE which takes the pixels at the border of the image and replicates to fill in the gap
         else:  # Use fixed crop for eval set (reproducibility)
             T = [A.SmallestMaxSize(max_size=size), A.CenterCrop(height=size, width=size)]
         T += [A.Normalize(mean=mean, std=std), ToTensorV2()]  # Normalize and convert to Tensor
